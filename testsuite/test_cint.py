@@ -14,7 +14,7 @@ import os
 import ctypes
 import numpy
 
-_cint = numpy.ctypeslib.load_library('libcint', '.')
+_cint = numpy.ctypeslib.load_library('lib/libcint', '.')
 
 
 PTR_LIGHT_SPEED    = 0
