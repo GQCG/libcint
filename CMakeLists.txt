@@ -23,6 +23,12 @@ find_package(QUADMATH)
 # Setup library
 # -------------
 
+target_compile_options(Cint PUBLIC -m64 -pipe)
+target_compile_options(Cint PUBLIC "$<IF:$<CONFIG:Debug>,-g,-O2>")
+target_compile_options(Cint PUBLIC "$<IF:$<C_COMPILER_ID:Intel>,-xHost,-march=native>")
+target_compile_options(Cint PUBLIC "$<$<C_COMPILER_ID:GNU>:-pthread>")
+target_link_options(Cint PUBLIC "$<$<C_COMPILER_ID:GNU>:-pthread>")
+
 add_subdirectory(src)
 add_subdirectory(include)
 
@@ -63,7 +69,7 @@ install(TARGETS Cint
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
-    INCLUDES DESTINATION ${BLAS_INCLUDE_DIR}
+	INCLUDES DESTINATION include
 )
 
 install(DIRECTORY ${CMAKE_BINARY_DIR}/include/cint/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
@@ -71,31 +77,31 @@ install(DIRECTORY ${CMAKE_BINARY_DIR}/include/cint/ DESTINATION ${CMAKE_INSTALL_
 install(EXPORT Cint-targets
 	FILE Cint-targets.cmake
 	NAMESPACE Cint::
-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Cint
+	DESTINATION cmake
 	)
 
 # Configure package
 # -----------------
 
-include(CmakePackageConfigHelpers)
+include(CMakePackageConfigHelpers)
 
 configure_package_config_file(
-    ${CMAKE_SOURCE_DIR}/cmake/Cint-config.cmake.in
-    ${CMAKE_BINARY_DIR}/cmake/Cint-config.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Cint
+    ${CMAKE_SOURCE_DIR}/cmake/cint-config.cmake.in
+    ${CMAKE_BINARY_DIR}/cmake/cint-config.cmake
+    INSTALL_DESTINATION cmake
 )
 
 write_basic_package_version_file(
-    ${CMAKE_BINARY_DIR}/cmake/Cint-config-version.cmake
+    ${CMAKE_BINARY_DIR}/cmake/cint-config-version.cmake
     VERSION ${CINT_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
 
 install(
     FILES
-        ${CMAKE_BINARY_DIR}/cmake/Cint-config.cmake
-        ${CMAKE_BINARY_DIR}/cmake/Cint-config-version.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Cint
+        ${CMAKE_BINARY_DIR}/cmake/cint-config.cmake
+        ${CMAKE_BINARY_DIR}/cmake/cint-config-version.cmake
+    DESTINATION cmake
 )
 
 # Parse additional options
