@@ -11,18 +11,12 @@ option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 option(ENABLE_EXAMPLE "build examples" OFF)
 option(ENABLE_TEST "build tests" OFF)
 option(QUICK_TEST "Quick tests" OFF)
-option(USE_MKL "Use MKL" OFF)
 
 # Look for supporting libraries
 # -----------------------------
 
-if(USE_MKL)
-	set(BLA_STATIC ON)
-	set(BLA_VENDOR Intel10_64lp)
-	find_package(BLAS REQUIRED)
-else()
-	find_package(BLAS REQUIRED)
-endif()
+set(BLA_STATIC ON)
+find_package(BLAS REQUIRED)
 
 find_package(QUADMATH)
 
