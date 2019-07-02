@@ -3,8 +3,6 @@ project (Cint VERSION 3.0.17 LANGUAGES C)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
-add_library(Cint SHARED "")
-
 # Supported options
 # -----------------
 option(WITH_RANGE_COULOMB "Range separated Coulomb" OFF)
@@ -13,15 +11,30 @@ option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 option(ENABLE_EXAMPLE "build examples" OFF)
 option(ENABLE_TEST "build tests" OFF)
 option(QUICK_TEST "Quick tests" OFF)
+option(USE_MKL "Use MKL" OFF)
 
 # Look for supporting libraries
 # -----------------------------
 
-find_package(BLAS REQUIRED)
+if(USE_MKL)
+	set(BLA_STATIC ON)
+	set(BLA_VENDOR Intel10_64lp)
+	find_package(BLAS REQUIRED)
+else()
+	find_package(BLAS REQUIRED)
+endif()
+
 find_package(QUADMATH)
 
 # Setup library
 # -------------
+
+if(BUILD_SHARED_LIBS)
+	add_library(Cint SHARED "")
+else()
+	add_library(Cint STATIC "")
+	set_target_properties(gqcp PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()
 
 target_compile_options(Cint PUBLIC -m64 -pipe)
 target_compile_options(Cint PUBLIC "$<IF:$<CONFIG:Debug>,-g,-O2>")
@@ -44,8 +57,10 @@ target_include_directories(Cint
 	${CMAKE_SOURCE_DIR}/src>
 	)
 
-target_include_directories(Cint PUBLIC $<BUILD_INTERFACE:${BLAS_INCLUDE_DIR}>)
-target_link_libraries(Cint PUBLIC ${BLAS_LIBRARIES})
+if(BLAS_FOUND)
+	target_include_directories(Cint PUBLIC $<BUILD_INTERFACE:${BLAS_INCLUDE_DIR}>)
+	target_link_libraries(Cint PUBLIC ${BLAS_LIBRARIES})
+endif()
 
 set_target_properties(Cint PROPERTIES
    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
