@@ -35,20 +35,22 @@ cache:
     - $HOME/download
 
 before_install:
-  - if [ -d $HOME/miniconda/bin ]; then
+  - |
+    set -ex
+    if [ -d $HOME/miniconda/bin ]; then
       echo "Miniconda already installed.";
     else
       echo "Installing miniconda.";
       rm -rf $HOME/miniconda;
       mkdir -p $HOME/download;
       if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-        if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+        if [ "$TRAVIS_PYTHON_VERSION" = "2.7" ]; then
           wget https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh -O $HOME/download/miniconda.sh;
         else
           wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $HOME/download/miniconda.sh;
         fi;
       else
-        if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+        if [ "$TRAVIS_PYTHON_VERSION" = "2.7" ]; then
           wget https://repo.anaconda.com/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O $HOME/download/miniconda.sh;
         else
           wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O $HOME/download/miniconda.sh;
