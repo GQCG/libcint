@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.13 FATAL_ERROR)
-project (Cint VERSION 3.0.17 LANGUAGES C)
+project (cint VERSION 3.0.17 LANGUAGES C)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
@@ -28,17 +28,17 @@ find_package(QUADMATH)
 # -------------
 
 if(BUILD_SHARED_LIBS)
-	add_library(Cint SHARED "")
+	add_library(cint SHARED "")
 else()
-	add_library(Cint STATIC "")
+	add_library(cint STATIC "")
 	set_target_properties(gqcp PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 
-target_compile_options(Cint PUBLIC -m64 -pipe)
-target_compile_options(Cint PUBLIC "$<IF:$<CONFIG:Debug>,-g,-O2>")
-target_compile_options(Cint PUBLIC "$<IF:$<C_COMPILER_ID:Intel>,-xHost,-march=native>")
-target_compile_options(Cint PUBLIC "$<$<C_COMPILER_ID:GNU>:-pthread>")
-target_link_options(Cint PUBLIC "$<$<C_COMPILER_ID:GNU>:-pthread>")
+target_compile_options(cint PUBLIC -m64 -pipe)
+target_compile_options(cint PUBLIC "$<IF:$<CONFIG:Debug>,-g,-O2>")
+target_compile_options(cint PUBLIC "$<IF:$<C_COMPILER_ID:Intel>,-xHost,-march=native>")
+target_compile_options(cint PUBLIC "$<$<C_COMPILER_ID:GNU>:-pthread>")
+target_link_options(cint PUBLIC "$<$<C_COMPILER_ID:GNU>:-pthread>")
 
 add_subdirectory(src)
 add_subdirectory(include)
@@ -46,7 +46,7 @@ add_subdirectory(include)
 configure_file(cmake/cint.h.in include/cint/cint.h)
 configure_file(cmake/config.h.in include/config.h)
 
-target_include_directories(Cint
+target_include_directories(cint
 	PUBLIC
 	$<INSTALL_INTERFACE:include>
 	$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
@@ -56,15 +56,15 @@ target_include_directories(Cint
 	)
 
 if(MKL_FOUND)
-	target_link_libraries(Cint PUBLIC MKL::MKL)
+	target_link_libraries(cint PUBLIC MKL::MKL)
 endif()
 
 if(BLAS_FOUND)
-	target_include_directories(Cint PUBLIC $<BUILD_INTERFACE:${BLAS_INCLUDE_DIR}>)
-	target_link_libraries(Cint PUBLIC ${BLAS_LIBRARIES})
+	target_include_directories(cint PUBLIC $<BUILD_INTERFACE:${BLAS_INCLUDE_DIR}>)
+	target_link_libraries(cint PUBLIC ${BLAS_LIBRARIES})
 endif()
 
-set_target_properties(Cint PROPERTIES
+set_target_properties(cint PROPERTIES
    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
@@ -74,15 +74,15 @@ set_target_properties(Cint PROPERTIES
 # ----------------------------------------------------------
 
 include(GenerateExportHeader)
-generate_export_header(Cint
+generate_export_header(cint
    EXPORT_MACRO_NAME CINT_API
    EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/include/cint.h
    )
 
 include(GNUInstallDirs)
 
-install(TARGETS Cint
-    EXPORT Cint-targets
+install(TARGETS cint
+    EXPORT cint-targets
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
@@ -91,9 +91,9 @@ install(TARGETS Cint
 
 install(DIRECTORY ${CMAKE_BINARY_DIR}/include/cint/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-install(EXPORT Cint-targets
-	FILE Cint-targets.cmake
-	NAMESPACE Cint::
+install(EXPORT cint-targets
+	FILE cint-targets.cmake
+	NAMESPACE cint::
 	DESTINATION cmake
 	)
 
@@ -126,22 +126,22 @@ install(
 
 
 if(WITH_RANGE_COULOMB)
-	target_compile_definitions(Cint PRIVATE WITH_RANGE_COULOMB=TRUE)
+	target_compile_definitions(cint PRIVATE WITH_RANGE_COULOMB=TRUE)
 	message(STATUS "Enabled WITH_RANGE_COULOMB")
 endif()
 
 if(WITH_COULOMB_ERF) # source files are added in src/CMakeLists.txt
-	target_compile_definitions(Cint PRIVATE WITH_COULOMB_ERF=TRUE)
+	target_compile_definitions(cint PRIVATE WITH_COULOMB_ERF=TRUE)
 	message(STATUS "Enabled WITH_COULOMB_ERF")
 endif()
 
 if(WITH_F12) # source files are added in src/CMakeLists.txt
-	target_compile_definitions(Cint PRIVATE WITH_F12=TRUE)
+	target_compile_definitions(cint PRIVATE WITH_F12=TRUE)
 	message(STATUS "Enabled WITH_F12")
 endif()
 
 if(WITH_GTG) # source files are added in src/CMakeLists.txt
-	target_compile_definitions(Cint PRIVATE WITH_GTG=TRUE)
+	target_compile_definitions(cint PRIVATE WITH_GTG=TRUE)
 	message(STATUS "Enabled WITH_GTG")
 endif()
 

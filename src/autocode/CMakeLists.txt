@@ -1,4 +1,4 @@
-target_sources(Cint
+target_sources(cint
         PRIVATE
             breit1.c
             dkb.c

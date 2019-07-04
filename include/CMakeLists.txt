@@ -1,4 +1,4 @@
-target_sources(Cint
+target_sources(cint
 	PRIVATE
 	   c2f.h
 	   cart2sph.h
