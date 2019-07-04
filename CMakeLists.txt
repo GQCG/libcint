@@ -11,12 +11,16 @@ option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 option(ENABLE_EXAMPLE "build examples" OFF)
 option(ENABLE_TEST "build tests" OFF)
 option(QUICK_TEST "Quick tests" OFF)
+option(USE_MKL "Use MKL as BLAS" OFF)
 
 # Look for supporting libraries
 # -----------------------------
 
-set(BLA_STATIC ON)
-find_package(BLAS REQUIRED)
+if (USE_MKL)
+	find_package(MKL REQUIRED)
+else()
+	find_package(BLAS REQUIRED)
+endif()
 
 find_package(QUADMATH)
 
@@ -50,6 +54,10 @@ target_include_directories(Cint
 	PRIVATE
 	${CMAKE_SOURCE_DIR}/src>
 	)
+
+if(MKL_FOUND)
+	target_link_libraries(Cint PUBLIC MKL::MKL)
+endif()
 
 if(BLAS_FOUND)
 	target_include_directories(Cint PUBLIC $<BUILD_INTERFACE:${BLAS_INCLUDE_DIR}>)
