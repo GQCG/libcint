@@ -1,48 +1,82 @@
-sudo: false
-language: c
-env:
-# this is for Python, per http://danielnouri.org/notes/2012/11/23/use-apt-get-to-install-python-dependencies-for-travis-ci/
-virtualenv:
-  system_site_packages: true
-os:
-- linux
-- osx
-compiler:
-- gcc
-- clang
-matrix:
-  allow_failures:
-  - os: osx
-    compiler: clang
+# Specify the virtual environment
+dist: xenial
+sudo: true
+
+# Specify the project language and the compiler to test to
+language: cpp
+compiler: gcc
+
 addons:
   apt:
     sources:
-    - ubuntu-toolchain-r-test
-    # clang-3.8 comes from this
-    - llvm-toolchain-precise
+      - ubuntu-toolchain-r-test
     packages:
-    - cmake
-    - python-numpy
-    - gcc-5
-    - g++-5
-    - gfortran-5
-    # This should provide OpenMP
-    - clang-3.8
+      - gcc-8
+      - g++-8
+
+# Enable Slack notifications, disable e-mail
+notifications:
+    slack: GQCG:5PZ5ibXCwNU1b5ToWbHVIqnI
+    email: false
+
+before_cache:
+    - rm -rf $HOME/miniconda/locks $HOME/miniconda/pkgs $HOME/miniconda/var $HOME/miniconda/conda-meta/history
+    - pip uninstall -y cardboardlint
+
+# Cache miniconda for faster build procedures
+cache:
+    directories:
+        - $HOME/miniconda
+        - $HOME/download
+
+before_install:
+    # Install Miniconda
+    - if [ -d $HOME/miniconda/bin ]; then
+        echo "Miniconda already installed.";
+      else
+        echo "Installing miniconda.";
+        rm -rf $HOME/miniconda;
+        mkdir -p $HOME/download;
+        if [[ "${TRAVIS_PYTHON_VERSION}" == "2.7" ]]; then
+            wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O $HOME/download/miniconda.sh;
+        else
+            wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $HOME/download/miniconda.sh;
+        fi;
+        bash $HOME/download/miniconda.sh -b -p ${HOME}/miniconda;
+      fi
+
+    # Add headers and libraries to path
+    - export CONDA_HOME=${HOME}/miniconda
+    - export C_INCLUDE_PATH=${CONDA_HOME}/include:${C_INCLUDE_PATH}
+    - export CPLUS_INCLUDE_PATH=${CONDA_HOME}/include:${CPLUS_INCLUDE_PATH}
+    - export LIBRARY_PATH=${CONDA_HOME}/lib:${LIBRARY_PATH}
+    - export LD_LIBRARY_PATH=${CONDA_HOME}/lib:${LD_LIBRARY_PATH}
+    - export DYLD_FALLBACK_LIBRARY_PATH=${CONDA_HOME}/lib:${DYLD_FALLBACK_LIBRARY_PATH}
+
+    # Set GCC 8 compiler
+    - export CC=/usr/bin/gcc-8
+    - export CXX=/usr/bin/g++-8
+
+# Install general dependencies
+install:
+
+    # Configure conda
+    - source $HOME/miniconda/bin/activate
+    - hash -r
+    - conda config --set always_yes yes --set changeps1 no
+
+    # Install a recent version of CMake, Boost and eigen if they are not yet already installed.
+    - if [ ! -f $HOME/miniconda/bin/cmake ]; then
+        conda install -c conda-forge cmake=3.13 blas mkl;
+        conda install -c intel mkl-include mkl-static intel-openmp;
+      else
+        echo "Using already installed packages.";
+      fi
+    - export PATH=${HOME}/miniconda/bin:${PATH} # Use conda CMake
+
+# Run the build script
 script:
-- env
-- mkdir build
-- cd build
-- if [ "${TRAVIS_OS_NAME}" = "osx" ] && [ "${CC}" = "gcc" ]; then brew install gcc6 && export CC=gcc-6 CXX=g++-6 ; fi
-- if [ "${TRAVIS_OS_NAME}" = "osx" ] && [ "${CC}" = "clang" ]; then brew install llvm38 && export CC=clang-3.8 CXX=clang-3.8 ; fi
-- export CMAKE_C_COMPILER=$CC
-- export CMAKE_CXX_COMPILER=$CXX
-- export CMAKE_C_FLAGS="-O3 -fopenmp"
-- export CMAKE_CXX_FLAGS="-O3 -fopenmp"
-- echo 'if the following fails, use `cmake --debug-output ..` instead'
-- cmake .. -DENABLE_TEST=1 -DQUICK_TEST=1
-- make
-- echo 'cannot do `make test` right now'
-after_failure:
-- echo "FAILURE"
-- find . -name CMakeOutput.log -exec cat {} ";"
-- find . -name CMakeError.log -exec cat {} ";"
+  - cd ${TRAVIS_BUILD_DIR}
+  - mkdir build && cd build
+  - cmake .. -DUSE_MKL=TRUE -DENABLE_TEST=1
+  - make -j3 VERBOSE=1 && make test ARGS=-j3 && sudo make install
