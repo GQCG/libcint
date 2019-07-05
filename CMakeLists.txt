@@ -56,11 +56,9 @@ target_include_directories(cint
 	${CMAKE_SOURCE_DIR}/src>
 	)
 
-if(MKL_FOUND)
+if(USE_MKL)
 	target_link_libraries(cint PUBLIC MKL::MKL)
-endif()
-
-if(BLAS_FOUND)
+else()
 	target_include_directories(cint PUBLIC $<BUILD_INTERFACE:${BLAS_INCLUDE_DIR}>)
 	target_link_libraries(cint PUBLIC ${BLAS_LIBRARIES})
 endif()
