@@ -31,7 +31,7 @@ if(BUILD_SHARED_LIBS)
 	add_library(cint SHARED "")
 else()
 	add_library(cint STATIC "")
-	set_target_properties(gqcp PROPERTIES POSITION_INDEPENDENT_CODE ON)
+	set_target_properties(cint PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 
 target_compile_options(cint PUBLIC -m64 -pipe)
