@@ -1,5 +1,7 @@
 @PACKAGE_INIT@
 
+include(CMakeFindDependencyMacro)
+
 if(@USE_MKL@)
   find_dependency(MKL REQUIRED)
  endif()
