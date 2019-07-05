@@ -4,7 +4,7 @@ matrix:
     - os: linux
       dist: xenial
       name: Python 2.7, gcc 8.0
-      env: CC=gcc-8 CXX=g++-8
+      env: PYTHON=2.7 CC=gcc-8 CXX=g++-8
       python:
         - "2.7"
       sudo: true
@@ -47,13 +47,13 @@ before_install:
       rm -rf $HOME/miniconda;
       mkdir -p $HOME/download;
       if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-        if [ "$TRAVIS_PYTHON_VERSION" = "2.7" ]; then
+        if [ "PYTHON" = "2.7" ]; then
           wget https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh -O $HOME/download/miniconda.sh;
         else
           wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $HOME/download/miniconda.sh;
         fi;
       else
-        if [ "$TRAVIS_PYTHON_VERSION" = "2.7" ]; then
+        if [ "PYTHON" = "2.7" ]; then
           wget https://repo.anaconda.com/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O $HOME/download/miniconda.sh;
         else
           wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O $HOME/download/miniconda.sh;
