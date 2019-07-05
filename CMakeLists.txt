@@ -129,6 +129,7 @@ if(WITH_RANGE_COULOMB)
 	target_compile_definitions(cint PRIVATE WITH_RANGE_COULOMB=TRUE)
 	message(STATUS "Enabled WITH_RANGE_COULOMB")
 endif()
+target_link_libraries(cint "-lm")
 
 if(WITH_COULOMB_ERF) # source files are added in src/CMakeLists.txt
 	target_compile_definitions(cint PRIVATE WITH_COULOMB_ERF=TRUE)
