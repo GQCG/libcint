@@ -1,5 +1,9 @@
 @PACKAGE_INIT@
 
+if(@USE_MKL@)
+  find_dependency(MKL REQUIRED)
+ endif()
+
 if(NOT TARGET cint::cint)
   include(${CMAKE_CURRENT_LIST_DIR}/cint-targets.cmake)
 endif()
