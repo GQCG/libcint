@@ -1,138 +1,174 @@
-cmake_minimum_required (VERSION 2.6)
-project (cint C)
-set(cint_SOVERSION "3")
-set(cint_VERSION "3.0.18")
+cmake_minimum_required (VERSION 3.13 FATAL_ERROR)
+project (cint VERSION 3.0.17 LANGUAGES C)
 
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O2 -DNDEBUG")
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
-  set(CMAKE_BUILD_TYPE RELWITHDEBINFO)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
+# Supported options
+# -----------------
+option(WITH_RANGE_COULOMB "Range separated Coulomb" OFF)
+option(WITH_COULOMB_ERF " " OFF)
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(ENABLE_EXAMPLE "build examples" OFF)
+option(ENABLE_TEST "build tests" OFF)
+option(QUICK_TEST "Quick tests" OFF)
+option(USE_MKL "Use MKL as BLAS" OFF)
+
+# Look for supporting libraries
+# -----------------------------
+
+if (USE_MKL)
+	find_package(MKL REQUIRED)
+else()
+	find_package(BLAS REQUIRED)
 endif()
-set(CMAKE_VERBOSE_MAKEFILE OFF)
 
-if (${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.3)
-  if (${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 3.0.0)
-    cmake_policy(SET CMP0042 NEW) 
-  endif()
-  include(GNUInstallDirs)
-else ()
-  set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "lib")
-  set(CMAKE_INSTALL_INCLUDEDIR include CACHE PATH "include")
-endif ()
-#set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 find_package(QUADMATH)
-if(QUADMATH_FOUND)
-  set(HAVE_QUADMATH_H 1 CACHE INTERNAL "Have QUADMATH")
+
+# Setup library
+# -------------
+
+if(BUILD_SHARED_LIBS)
+	add_library(cint SHARED "")
+else()
+	add_library(cint STATIC "")
+	set_target_properties(gqcp PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 
-find_package(BLAS REQUIRED)
+target_compile_options(cint PUBLIC -m64 -pipe)
+target_compile_options(cint PUBLIC "$<IF:$<CONFIG:Debug>,-g,-O2>")
+target_compile_options(cint PUBLIC "$<IF:$<C_COMPILER_ID:Intel>,-xHost,-march=native>")
+target_compile_options(cint PUBLIC "$<$<C_COMPILER_ID:GNU>:-pthread>")
+target_link_options(cint PUBLIC "$<$<C_COMPILER_ID:GNU>:-pthread>")
+target_link_options(cint PUBLIC -lm)
 
-include(CheckFunctionExists)
-set(CMAKE_REQUIRED_INCLUDES math.h)
-set(CMAKE_REQUIRED_LIBRARIES m)
-check_function_exists(expl HAVE_EXPL)
-check_function_exists(sqrtl HAVE_SQRTL)
-#set(CMAKE_REQUIRED_INCLUDES quadmath.h)
-#set(CMAKE_REQUIRED_LIBRARIES quadmath)
-#check_function_exists(fabsq HAVE_QUADMATH_H)
+add_subdirectory(src)
+add_subdirectory(include)
 
-include_directories(
-  ${PROJECT_BINARY_DIR}/include
-  ${PROJECT_SOURCE_DIR}/src
-  ${PROJECT_BINARY_DIR}/src)
+configure_file(cmake/cint.h.in include/cint/cint.h)
+configure_file(cmake/config.h.in include/config.h)
 
-configure_file(
-  "${PROJECT_SOURCE_DIR}/src/config.h.in"
-  "${PROJECT_BINARY_DIR}/src/config.h")
+target_include_directories(cint
+	PUBLIC
+	$<INSTALL_INTERFACE:include>
+	$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+	$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
+	PRIVATE
+	${CMAKE_SOURCE_DIR}/src>
+	)
 
-configure_file(
-  "${PROJECT_SOURCE_DIR}/include/cint.h.in"
-  "${PROJECT_BINARY_DIR}/include/cint.h")
-
-set(cintSrc 
-  src/c2f.c src/cart2sph.c src/cint1e.c src/cint2e.c src/cint_bas.c
-  src/fblas.c src/g1e.c src/g2e.c src/misc.c src/optimizer.c
-  src/rys_roots.c
-  src/cint2c2e.c src/g2c2e.c src/cint3c2e.c src/g3c2e.c
-  src/cint3c1e.c src/g3c1e.c src/breit.c src/cint4c1e.c src/g4c1e.c
-  src/cint1e_a.c src/cint3c1e_a.c
-  src/autocode/breit1.c src/autocode/dkb.c src/autocode/gaunt1.c
-  src/autocode/grad1.c src/autocode/grad2.c src/autocode/hess.c
-  src/autocode/int3c1e.c src/autocode/int3c2e.c src/autocode/intor1.c
-  src/autocode/intor2.c src/autocode/intor3.c src/autocode/intor4.c)
-
-#option(WITH_RANGE_COULOMB "Range separated Coulomb" on)
-if(WITH_RANGE_COULOMB)
-# defined in config.h
-#  add_definitions(-DWITH_RANGE_COULOMB)
-  message("Enabled WITH_RANGE_COULOMB")
-endif(WITH_RANGE_COULOMB)
-
-if(WITH_COULOMB_ERF)
-  set(cintSrc ${cintSrc} src/g2e_coulerf.c src/cint2e_coulerf.c)
-  add_definitions(-DWITH_COULOMB_ERF)
-  message("Enabled WITH_COULOMB_ERF")
-endif(WITH_COULOMB_ERF)
-
-if(WITH_F12)
-  set(cintSrc ${cintSrc} src/g2e_f12.c src/stg_roots.c src/cint2e_f12.c)
-  add_definitions(-DWITH_F12)
-  message("Enabled WITH_F12")
-endif(WITH_F12)
-
-if(WITH_GTG)
-  set(cintSrc ${cintSrc} src/g2e_gtg.c src/cint2e_gtg.c src/cint3c2e_gtg.c
-    src/cint2c2e_gtg.c)
-  add_definitions(-DWITH_GTG)
-  message("Enabled WITH_GTG")
-endif(WITH_GTG)
-
-option(BUILD_SHARED_LIBS "build shared libraries" 1)
-option(ENABLE_EXAMPLE "build examples" 0)
-option(ENABLE_TEST "build tests" 0)
-option(ENABLE_STATIC "Enforce static library build" 0)
-if(QUICK_TEST)
-  set(RUN_QUICK_TEST --quick)
+if(MKL_FOUND)
+	target_link_libraries(cint PUBLIC MKL::MKL)
 endif()
 
-if(ENABLE_STATIC)
-  set(BUILD_SHARED_LIBS 0)
+if(BLAS_FOUND)
+	target_include_directories(cint PUBLIC $<BUILD_INTERFACE:${BLAS_INCLUDE_DIR}>)
+	target_link_libraries(cint PUBLIC ${BLAS_LIBRARIES})
 endif()
 
-add_library(cint ${cintSrc})
 set_target_properties(cint PROPERTIES
-  VERSION ${cint_VERSION}
-  SOVERSION ${cint_SOVERSION}
-  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
-target_link_libraries(cint ${BLAS_LIBRARIES})
-if(QUADMATH_FOUND)
-  target_link_libraries(cint quadmath)
-endif()
-target_link_libraries(cint "-lm")
+   ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+   )
 
-install(TARGETS cint DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
-install(FILES ${PROJECT_BINARY_DIR}/include/cint.h DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
+# Install the library (relative to the CMAKE_INSTALL_PREFIX)
+# ----------------------------------------------------------
+
+include(GenerateExportHeader)
+generate_export_header(cint
+   EXPORT_MACRO_NAME CINT_API
+   EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/include/cint.h
+   )
+
+include(GNUInstallDirs)
+
+install(TARGETS cint
+    EXPORT cint-targets
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+	INCLUDES DESTINATION include
+)
+
+install(DIRECTORY ${CMAKE_BINARY_DIR}/include/cint/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+install(EXPORT cint-targets
+	FILE cint-targets.cmake
+	NAMESPACE cint::
+	DESTINATION cmake
+	)
+
+# Configure package
+# -----------------
+
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(
+    ${CMAKE_SOURCE_DIR}/cmake/cint-config.cmake.in
+    ${CMAKE_BINARY_DIR}/cmake/cint-config.cmake
+    INSTALL_DESTINATION cmake
+)
+
+write_basic_package_version_file(
+    ${CMAKE_BINARY_DIR}/cmake/cint-config-version.cmake
+    VERSION ${CINT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+install(
+    FILES
+        ${CMAKE_BINARY_DIR}/cmake/cint-config.cmake
+        ${CMAKE_BINARY_DIR}/cmake/cint-config-version.cmake
+    DESTINATION cmake
+)
+
+# Parse additional options
+# ------------------------
+
+
+if(WITH_RANGE_COULOMB)
+	target_compile_definitions(cint PRIVATE WITH_RANGE_COULOMB=TRUE)
+	message(STATUS "Enabled WITH_RANGE_COULOMB")
+endif()
+
+if(WITH_COULOMB_ERF) # source files are added in src/CMakeLists.txt
+	target_compile_definitions(cint PRIVATE WITH_COULOMB_ERF=TRUE)
+	message(STATUS "Enabled WITH_COULOMB_ERF")
+endif()
+
+if(WITH_F12) # source files are added in src/CMakeLists.txt
+	target_compile_definitions(cint PRIVATE WITH_F12=TRUE)
+	message(STATUS "Enabled WITH_F12")
+endif()
+
+if(WITH_GTG) # source files are added in src/CMakeLists.txt
+	target_compile_definitions(cint PRIVATE WITH_GTG=TRUE)
+	message(STATUS "Enabled WITH_GTG")
+endif()
 
 if(ENABLE_EXAMPLE)
-  enable_language(Fortran)
-  find_package(OpenMP)
-  if(OPENMP_FOUND)
-    set(HAVE_OPENMP 1)
-  else ()
-    set(OpenMP_C_FLAGS " ")
-  endif()
-  add_subdirectory(examples)
+	enable_language(Fortran)
+	find_package(OpenMP)
+	if(OPENMP_FOUND)
+		set(HAVE_OPENMP 1)
+	else ()
+		set(OpenMP_C_FLAGS " ")
+	endif()
+	add_subdirectory(examples)
+endif()
+
+if(QUICK_TEST)
+	set(RUN_QUICK_TEST --quick)
 endif()
 
 if(BUILD_SHARED_LIBS AND ENABLE_TEST)
-  find_package(PythonInterp)
-  message(STATUS "Found python  ${PYTHON_EXECUTABLE}")
-  if(PYTHONINTERP_FOUND)
-    enable_testing()
-    add_test(NAME cinttest
-      COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/testsuite/test_cint.py ${RUN_QUICK_TEST})
-    add_test(NAME cint3c2etest
-      COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/testsuite/test_3c2e.py ${RUN_QUICK_TEST})
-  endif()
+	find_package(PythonInterp)
+	message(STATUS "Found python  ${PYTHON_EXECUTABLE}")
+	if(PYTHONINTERP_FOUND)
+ 	enable_testing()
+ 	add_test(NAME cinttest
+   		COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/testsuite/test_cint.py ${RUN_QUICK_TEST})
+	add_test(NAME cint3c2etest
+   		COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/testsuite/test_3c2e.py ${RUN_QUICK_TEST})
+	endif()
 endif()
