@@ -39,6 +39,7 @@ target_compile_options(cint PUBLIC "$<IF:$<CONFIG:Debug>,-g,-O2>")
 target_compile_options(cint PUBLIC "$<IF:$<C_COMPILER_ID:Intel>,-xHost,-march=native>")
 target_compile_options(cint PUBLIC "$<$<C_COMPILER_ID:GNU>:-pthread>")
 target_link_options(cint PUBLIC "$<$<C_COMPILER_ID:GNU>:-pthread>")
+target_link_options(cint PUBLIC -lm)
 
 add_subdirectory(src)
 add_subdirectory(include)
@@ -129,7 +130,6 @@ if(WITH_RANGE_COULOMB)
 	target_compile_definitions(cint PRIVATE WITH_RANGE_COULOMB=TRUE)
 	message(STATUS "Enabled WITH_RANGE_COULOMB")
 endif()
-target_link_libraries(cint "-lm")
 
 if(WITH_COULOMB_ERF) # source files are added in src/CMakeLists.txt
 	target_compile_definitions(cint PRIVATE WITH_COULOMB_ERF=TRUE)
