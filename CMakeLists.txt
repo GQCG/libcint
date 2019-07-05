@@ -39,6 +39,7 @@ target_compile_options(cint PUBLIC "$<IF:$<CONFIG:Debug>,-g,-O2>")
 target_compile_options(cint PUBLIC "$<IF:$<C_COMPILER_ID:Intel>,-xHost,-march=native>")
 target_compile_options(cint PUBLIC "$<$<C_COMPILER_ID:GNU>:-pthread>")
 target_link_options(cint PUBLIC "$<$<C_COMPILER_ID:GNU>:-pthread>")
+target_link_options(cint PUBLIC -lm)
 
 add_subdirectory(src)
 add_subdirectory(include)
