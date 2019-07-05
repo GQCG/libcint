@@ -16,8 +16,8 @@ matrix:
             - gcc-8
             - g++-8
     - os: osx
-      name: Python 2.7, AppleClang 9
-      osx_image: xcode9
+      name: Python 2.7, AppleClang 8.3
+      osx_image: xcode8.3
       python:
         - "2.7"
       env: CC=clang CXX=clang++
