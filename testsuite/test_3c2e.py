@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 # -*- coding: utf-8
+from __future__ import print_function
 
 '''
 test libcint
