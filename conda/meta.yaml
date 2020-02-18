@@ -15,7 +15,6 @@ requirements:
       - llvm-openmp			          # [osx]
     host:
       - intel-openmp {{ mkl }}
-      - mkl {{ mkl }}
       - mkl-devel {{ mkl }}
       - mkl-static {{ mkl }}
       - python =2.7
