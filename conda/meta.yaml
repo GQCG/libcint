@@ -1,0 +1,39 @@
+{% set version = "3.0.17" %}
+
+package:
+    name: cint
+    version: {{ version }}
+source:
+    git_url: https://github.com/GQCG/libcint.git
+    git_tag: develop
+requirements:
+    build:
+      - git
+      - make
+      - {{ compiler('c') }}			  
+      - cmake {{ cmake }}
+      - llvm-openmp			          # [osx]
+    host:
+      - intel-openmp {{ mkl }}
+      - mkl {{ mkl }}
+      - mkl-devel {{ mkl }}
+      - mkl-static {{ mkl }}
+      - python =2.7
+      - numpy {{ numpy }}
+    run:
+      - {{ pin_compatible('intel-openmp', min_pin='x.x', max_pin='x.x') }}
+      - {{ pin_compatible('mkl', min_pin='x.x', max_pin='x.x') }}
+test:
+  commands:
+    - test -f ${PREFIX}/lib/libcint$SHLIB_EXT
+    - test -f ${PREFIX}/include/cint.h
+    - ldd -r -u ${PREFIX}/lib/libcint$SHLIB_EXT # [linux]
+    - ldd -v ${PREFIX}/lib/libcint$SHLIB_EXT    # [linux]
+    - otool -L ${PREFIX}/lib/libcint$SHLIB_EXT  # [osx]
+    - conda inspect linkages --show-files --groupby=dependency $PKG_NAME
+    - conda inspect objects -p ${PREFIX} $PKG_NAME # [osx]
+about:
+    home: https://github.com/GQCG/libcint
+    license: BSD 2-Clause "Simplified" License
+    license_file: LICENSE
+    summary: 'General GTO integrals for quantum chemistry.'
