@@ -31,8 +31,6 @@ test:
     - ldd -r -u ${PREFIX}/lib/libcint$SHLIB_EXT # [linux]
     - ldd -v ${PREFIX}/lib/libcint$SHLIB_EXT    # [linux]
     - otool -L ${PREFIX}/lib/libcint$SHLIB_EXT  # [osx]
-    - conda inspect linkages --show-files --groupby=dependency $PKG_NAME
-    - conda inspect objects -p ${PREFIX} $PKG_NAME # [osx]
 about:
     home: https://github.com/GQCG/libcint
     license: BSD 2-Clause "Simplified" License
