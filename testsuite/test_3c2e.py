@@ -198,9 +198,9 @@ def test_int3c2e_sph(name, fnref, vref, dim, place):
                 v1 += abs(numpy.array(op[:nd])).sum()
                 cnt += nd
     if close(v1, vref, cnt, place):
-        print "pass: ", name
+        print("pass: ", name)
     else:
-        print "* FAIL: ", name, ". err:", '%.16g' % abs(v1-vref), "/", vref
+        print("* FAIL: ", name, ". err:", '%.16g' % abs(v1-vref), "/", vref)
 
 
 def sf2spinor(mat, i, j, bas):
@@ -259,9 +259,9 @@ def test_int3c2e_spinor(name, fnref, vref, dim, place):
                 v1 += abs(numpy.array(op)).sum()
                 cnt += op.size
     if close(v1, vref, cnt, place):
-        print "pass: ", name
+        print("pass: ", name)
     else:
-        print "* FAIL: ", name, ". err:", '%.16g' % abs(v1-vref), "/", vref
+        print("* FAIL: ", name, ". err:", '%.16g' % abs(v1-vref), "/", vref)
 
 
 def test_int2c_sph(name, fnref, vref, dim, place):
@@ -290,9 +290,9 @@ def test_int2c_sph(name, fnref, vref, dim, place):
             v1 += abs(numpy.array(op[:nd])).sum()
             cnt += nd
     if close(v1, vref, cnt, place):
-        print "pass: ", name
+        print("pass: ", name)
     else:
-        print "* FAIL: ", name, ". err:", '%.16g' % abs(v1-vref), "/", vref
+        print("* FAIL: ", name, ". err:", '%.16g' % abs(v1-vref), "/", vref)
 
 
 
