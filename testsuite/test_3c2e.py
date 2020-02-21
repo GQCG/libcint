@@ -194,7 +194,7 @@ def test_int3c2e_sph(name, fnref, vref, dim, place):
                 intoref(pref, shls, c_atm, natm, c_bas, nbas, c_env, opt)
                 intor(pop, shls, c_atm, natm, c_bas, nbas, c_env, opt)
                 if not numpy.allclose(opref[:nd], op[:nd]):
-                    print 'Fail:', name, i,j,k
+                    print('Fail:', name, i,j,k)
                 v1 += abs(numpy.array(op[:nd])).sum()
                 cnt += nd
     if close(v1, vref, cnt, place):
@@ -255,7 +255,7 @@ def test_int3c2e_spinor(name, fnref, vref, dim, place):
                 intor(op.ctypes.data_as(ctypes.POINTER(np.complex128)), shls,
                       c_atm, natm, c_bas, nbas, c_env, opt)
                 if not numpy.allclose(zmat, op[:,:,:,0]):
-                    print 'Fail:', name, i,j,k
+                    print('Fail:', name, i,j,k)
                 v1 += abs(numpy.array(op)).sum()
                 cnt += op.size
     if close(v1, vref, cnt, place):
@@ -286,7 +286,7 @@ def test_int2c_sph(name, fnref, vref, dim, place):
             shls = (ctypes.c_int * 2)(i, k)
             intor(pop, shls, c_atm, natm, c_bas, nbas, c_env, opt)
             if not numpy.allclose(opref[:nd], op[:nd]):
-                print 'Fail:', name, i,k
+                print('Fail:', name, i,k)
             v1 += abs(numpy.array(op[:nd])).sum()
             cnt += nd
     if close(v1, vref, cnt, place):
