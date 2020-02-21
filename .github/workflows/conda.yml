@@ -40,5 +40,5 @@ jobs:
           conda create -n packaging -c conda-forge conda-build anaconda-client conda-verify
           source activate packaging
           conda config --set anaconda_upload yes
-          conda-build -c conda-forge conda --user ${{ secrets.ANACONDA_USER }} --token ${{ secrets.ANACONDA_TOKEN }}
+          conda-build -c conda-forge -c intel conda --user ${{ secrets.ANACONDA_USER }} --token ${{ secrets.ANACONDA_TOKEN }}
           anaconda logout     
