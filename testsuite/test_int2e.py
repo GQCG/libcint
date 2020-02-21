@@ -59,7 +59,7 @@ def run(intor, comp=1, suffix='_sph', thr=1e-7):
         intor = intor = 'c%s'%intor
     else:
         intor = intor = 'c%s%s'%(intor,suffix)
-    print intor
+    print(intor)
     fn1 = getattr(_cint3, intor)
     fn2 = getattr(_cint2, intor)
     cintopt = make_cintopt(mol._atm, mol._bas, mol._env, intor)
@@ -83,12 +83,12 @@ def run(intor, comp=1, suffix='_sph', thr=1e-7):
                         mol._bas.ctypes.data_as(ctypes.c_void_p), ctypes.c_int(mol.nbas),
                         mol._env.ctypes.data_as(ctypes.c_void_p), lib.c_null_ptr())
                     if numpy.linalg.norm(ref-buf) > thr:
-                        print intor, '| nopt', i, j, k, l, numpy.linalg.norm(ref-buf)#, ref, buf
+                        print(intor, '| nopt', i, j, k, l, numpy.linalg.norm(ref-buf))#, ref, buf
                         #exit()
                     fn1(buf.ctypes.data_as(ctypes.c_void_p),
                         (ctypes.c_int*4)(i,j,k,l), *args)
                     if numpy.linalg.norm(ref-buf) > thr:
-                        print intor, '|', i, j, k, l, numpy.linalg.norm(ref-buf)
+                        print(intor, '|', i, j, k, l, numpy.linalg.norm(ref-buf))
                         #exit()
 
 run('int2e')

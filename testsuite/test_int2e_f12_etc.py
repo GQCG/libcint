@@ -71,7 +71,7 @@ for i in range(mol.nbas):
                 err = numpy.linalg.norm(ref-buf)
                 yp_err.append(err)
                 if err > 1e-3:
-                    print 'yp', i, j, k, l, numpy.linalg.norm(ref-buf)/numpy.linalg.norm(ref)
+                    print('yp', i, j, k, l, numpy.linalg.norm(ref-buf)/numpy.linalg.norm(ref))
                     #exit()
                 fn3(buf.ctypes.data_as(ctypes.c_void_p),
                    (ctypes.c_int*4)(i,j,k,l),
@@ -79,7 +79,7 @@ for i in range(mol.nbas):
                     mol._bas.ctypes.data_as(ctypes.c_void_p), ctypes.c_int(mol.nbas),
                     mol._env.ctypes.data_as(ctypes.c_void_p), lib.c_null_ptr())
                 if numpy.linalg.norm(ref-buf) > 1e-5:
-                    print 'coulerf', i, j, k, l, numpy.linalg.norm(ref-buf)
+                    print('coulerf', i, j, k, l, numpy.linalg.norm(ref-buf))
                     exit()
                 fn4(buf.ctypes.data_as(ctypes.c_void_p),
                    (ctypes.c_int*4)(i,j,k,l),
@@ -87,6 +87,6 @@ for i in range(mol.nbas):
                     mol._bas.ctypes.data_as(ctypes.c_void_p), ctypes.c_int(mol.nbas),
                     mol._env.ctypes.data_as(ctypes.c_void_p), lib.c_null_ptr())
                 if numpy.linalg.norm(ref-buf) > 1e-3:
-                    print 'coul_gtg', i, j, k, l, numpy.linalg.norm(ref-buf)
+                    print('coul_gtg', i, j, k, l, numpy.linalg.norm(ref-buf))
                     exit()
-print max(yp_err)
+print(max(yp_err))
