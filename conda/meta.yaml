@@ -14,14 +14,12 @@ requirements:
       - cmake {{ cmake }}
       - llvm-openmp			          # [osx]
       - intel-openmp
+      - mkl-static {{ mkl-static }}
+      - mkl-include {{ mkl-include }}
     host:
-      - mkl-include {{ mkl_include }}
-      - mkl-static {{ mkl_static }}
-      - numpy
+      - python {{ python }}
     run:
-      - {{ pin_compatible('mkl-include', min_pin='x.x', max_pin='x.x') }}
-      - {{ pin_compatible('mkl-static', min_pin='x.x', max_pin='x.x') }}
-      - numpy
+      - pin_compatible('numpy')
 test:
   commands:
     - test -f ${PREFIX}/lib/libcint$SHLIB_EXT
