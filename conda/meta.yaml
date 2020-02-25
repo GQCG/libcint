@@ -5,7 +5,7 @@ package:
     version: {{ version }}
 source:
     git_url: https://github.com/GQCG/libcint.git
-    git_tag: develop
+    git_tag: devops/conda
 requirements:
     build:
       - git
@@ -14,9 +14,9 @@ requirements:
       - cmake {{ cmake }}
       - llvm-openmp			          # [osx]
       - intel-openmp
-      - mkl-devel {{ mkl-devel }}
+      - mkl-static {{ mkl-static }}
+      - mkl-include {{ mkl-include }}
     host:
-      - pin_compatible('mkl')
       - python {{ python }}
     run:
       - pin_compatible('numpy')
