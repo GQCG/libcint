@@ -14,8 +14,9 @@ requirements:
       - {{ compiler('c') }}			  
       - cmake {{ cmake }}
       - llvm-openmp			          # [osx]
-      - mkl-static {{ mkl-static }}
-      - mkl-include {{ mkl-include }}
+      - intel-openmp
+      - mkl-static {{ mkl_static }}
+      - mkl-include {{ mkl_include }}
     host:
       - python {{ python }}
     run:

@@ -15,13 +15,9 @@ CONDA_BUILD_SYSROOT:
   - /opt/MacOSX10.9.sdk           # [osx]
 
 # Packages
-blas_impl:
-  - mkl
-mkl:
+mkl_static:
   - 2019.0
-mkl-static:
-  - 2019.0
-mkl-include:
+mkl_include:
   - 2019.0
 cmake:
   - 3.14.0
