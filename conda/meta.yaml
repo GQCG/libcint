@@ -13,8 +13,6 @@ requirements:
       - make
       - {{ compiler('c') }}			  
       - cmake {{ cmake }}
-      - llvm-openmp			          # [osx]
-      - intel-openmp
       - mkl-static {{ mkl_static }}
       - mkl-include {{ mkl_include }}
       - python {{ python }}
@@ -28,6 +26,6 @@ test:
     - otool -L ${PREFIX}/lib/libcint$SHLIB_EXT  # [osx]
 about:
     home: https://github.com/GQCG/libcint
-    license: BSD 2-Clause "Simplified" License
+    license: 'BSD 2-Clause Simplified License'
     license_file: LICENSE
     summary: 'General GTO integrals for quantum chemistry.'
