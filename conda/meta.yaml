@@ -21,9 +21,6 @@ test:
   commands:
     - test -f ${PREFIX}/lib/libcint$SHLIB_EXT
     - test -f ${PREFIX}/include/cint.h
-    - ldd -r -u ${PREFIX}/lib/libcint$SHLIB_EXT # [linux]
-    - ldd -v ${PREFIX}/lib/libcint$SHLIB_EXT    # [linux]
-    - otool -L ${PREFIX}/lib/libcint$SHLIB_EXT  # [osx]
 about:
     home: https://github.com/GQCG/libcint
     license: BSD
