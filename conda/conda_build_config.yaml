@@ -15,8 +15,8 @@ CONDA_BUILD_SYSROOT:
   - /opt/MacOSX10.9.sdk           # [osx]
 
 # Packages
-blas_impl:
-  - mkl
+#blas_impl:
+#  - mkl
 mkl-devel:
   - 2019.0
 cmake:
@@ -30,6 +30,6 @@ python:
 numpy:
   - 1.18.1
 
-pin_run_as_build:
-  mkl:
-    max_pin: x.x
+#pin_run_as_build:
+#  mkl:
+#    max_pin: x.x
