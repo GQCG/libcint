@@ -16,7 +16,7 @@ requirements:
       - intel-openmp
       - mkl-devel {{ mkl-devel }}
     host:
-      - pin_compatible('mkl')
+#      - pin_compatible('mkl')
       - python {{ python }}
     run:
       - pin_compatible('numpy')
