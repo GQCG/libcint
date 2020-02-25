@@ -5,7 +5,7 @@ package:
     version: {{ version }}
 source:
     git_url: https://github.com/GQCG/libcint.git
-    git_tag: devops/conda
+    git_tag: develop
 requirements:
     build:
       - git

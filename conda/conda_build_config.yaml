@@ -21,8 +21,6 @@ mkl-include:
   - 2019.0
 cmake:
   - 3.14.0
-mkl:
-  - 2019.0
 python:
   - 3.6
   - 3.7
