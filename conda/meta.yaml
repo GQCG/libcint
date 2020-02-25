@@ -17,10 +17,9 @@ requirements:
       - intel-openmp
       - mkl-static {{ mkl_static }}
       - mkl-include {{ mkl_include }}
+      - numpy {{ numpy }}
     host:
       - python {{ python }}
-    run:
-      - {{ pin_compatible('numpy') }}
 test:
   commands:
     - test -f ${PREFIX}/lib/libcint$SHLIB_EXT
