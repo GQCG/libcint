@@ -15,7 +15,6 @@ requirements:
       - cmake {{ cmake }}
       - mkl-static {{ mkl_static }}
       - mkl-include {{ mkl_include }}
-      - numpy {{ numpy }}
     host:
       - python {{ python }}
       - numpy {{ numpy }}
