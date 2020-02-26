@@ -15,8 +15,9 @@ requirements:
       - cmake {{ cmake }}
       - mkl-static {{ mkl_static }}
       - mkl-include {{ mkl_include }}
-      - python {{ python }}
       - numpy {{ numpy }}
+    host:
+      - python {{ python }}
 test:
   commands:
     - test -f ${PREFIX}/lib/libcint$SHLIB_EXT
