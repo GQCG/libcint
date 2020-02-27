@@ -17,10 +17,9 @@ requirements:
       - mkl-include {{ mkl_include }}
     host:
       - python {{ python }}
-      - numpy {{ numpy }}
     run:
       - python {{ python }}
-      - numpy {{ numpy }}
+      - {{ pin_compatible('numpy') }}
 test:
   commands:
     - test -f ${PREFIX}/lib/libcint$SHLIB_EXT
