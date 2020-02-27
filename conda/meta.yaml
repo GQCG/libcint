@@ -18,6 +18,9 @@ requirements:
     host:
       - python {{ python }}
       - numpy {{ numpy }}
+    run:
+      - python {{ python }}
+      - numpy {{ numpy }}
 test:
   commands:
     - test -f ${PREFIX}/lib/libcint$SHLIB_EXT
