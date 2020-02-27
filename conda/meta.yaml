@@ -17,7 +17,7 @@ requirements:
       - mkl-include {{ mkl_include }}
     host:
       - python {{ python }}
-      - {{ pin_compatible('numpy') }}
+      - numpy {{ numpy }}
     run:
       - python {{ python }}
       - {{ pin_compatible('numpy') }}
