@@ -9,18 +9,31 @@ source:
     git_tag: develop
 requirements:
     build:
+      - cmake {{ cmake }}
+      - {{ compiler('c') }}
+      - {{ compiler('cxx') }}
+      - eigen {{ eigen }}
       - git
       - make
-      - {{ compiler('c') }}			  
-      - cmake {{ cmake }}
       - mkl-static {{ mkl_static }}
       - mkl-include {{ mkl_include }}
     host:
-      - python {{ python }}
+      - blas {{ blas }}
+      - intel-openmp {{ intel_openmp }}
+      - mkl {{ mkl }}
       - numpy {{ numpy }}
+      - llvm-openmp               # [osx]
+      - openmp {{ openmp }}       # [linux]
+      - python {{ python }}
     run:
-      - python {{ python }}
+      - {{ pin_compatible('blas') }}
+      - {{ pin_compatible('intel_openmp') }}
+      - {{ pin_compatible('mkl') }}
       - numpy {{ numpy }}
+      - python {{ python }}
+      - llvm-openmp                    # [osx]
+      - {{ pin_compatible('openmp') }} # [linux]
+
 test:
   commands:
     - test -f ${PREFIX}/lib/libcint$SHLIB_EXT
