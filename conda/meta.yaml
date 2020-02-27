@@ -20,7 +20,7 @@ requirements:
       - numpy {{ numpy }}
     run:
       - python {{ python }}
-      - {{ pin_compatible('numpy', min_pin='x.x') }}
+      - numpy {{ numpy }}
 test:
   commands:
     - test -f ${PREFIX}/lib/libcint$SHLIB_EXT
