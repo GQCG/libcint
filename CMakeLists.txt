@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 cmake_minimum_required (VERSION 3.13 FATAL_ERROR)
 project (cint VERSION 3.0.17 LANGUAGES C)
 
@@ -20,6 +21,16 @@ if (USE_MKL)
 	find_package(MKL REQUIRED)
 else()
 	find_package(BLAS REQUIRED)
+=======
+cmake_minimum_required (VERSION 2.6)
+project (cint C)
+set(cint_SOVERSION "3")
+set(cint_VERSION "3.0.20")
+
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O2 -DNDEBUG")
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
+  set(CMAKE_BUILD_TYPE RELWITHDEBINFO)
+>>>>>>> Fix integral ggkin
 endif()
 
 find_package(QUADMATH)
