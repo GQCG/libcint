@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 # -*- coding: utf-8
+from __future__ import print_function
 
 '''
 test libcint
@@ -211,8 +212,8 @@ def sf2spinor(mat, i, j, bas):
     l2 = bas[j,ANG_OF]
     d1 = bas[i,NCTR_OF]
     d2 = bas[j,NCTR_OF]
-    u1a, u1b = pyscf.symm.cg.real2spinor(l1)
-    u2a, u2b = pyscf.symm.cg.real2spinor(l2)
+    u1a, u1b = pyscf.gto.mole.sph2spinor_l(l1)
+    u2a, u2b = pyscf.gto.mole.sph2spinor_l(l2)
     u1a = scipy.linalg.block_diag(*((u1a,)*d1))
     u1b = scipy.linalg.block_diag(*((u1b,)*d1))
     u2a = scipy.linalg.block_diag(*((u2a,)*d2))
