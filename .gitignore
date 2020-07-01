@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 *.so
 *.la
 *.o
@@ -7,8 +7,17 @@ CMakeCache.txt
 CMakeFiles
 Makefile
 cmake_install.cmake
-=======
+
 .idea/
 cmake-build-debug/
 cmake-build-release/
->>>>>>> CMake refactor: adhere to Modern CMake standards.
+
+doc/*.aux
+doc/*.fdb_latexmk
+doc/*.fls
+doc/*.log
+doc/*.out
+doc/*.synctex.gz
+doc/*.toc
+build/
+
