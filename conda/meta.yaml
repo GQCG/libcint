@@ -23,7 +23,7 @@ requirements:
       - mkl {{ mkl }}
       - numpy {{ numpy }}
       - llvm-openmp               # [osx]
-      - openmp                    # [linux]
+      - openmp {{ openmp }}       # [linux]
       - python {{ python }}
     run:
       - {{ pin_compatible('blas') }}
@@ -32,7 +32,7 @@ requirements:
       - numpy {{ numpy }}
       - python {{ python }}
       - llvm-openmp                    # [osx]
-      - openmp                         # [linux]
+      - {{ pin_compatible('openmp') }} # [linux]
 
 test:
   commands:
