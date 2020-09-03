@@ -36,13 +36,13 @@ else()
 endif()
 
 target_compile_options(cint PUBLIC -m64 -pipe)
-target_compile_options(cint PUBLIC "$<IF:$<CONFIG:Debug>,-g,-O2>")
+target_compile_options(cint PRIVATE "$<IF:$<CONFIG:Debug>,-g,-O2>")
 target_compile_options(cint PUBLIC "$<$<C_COMPILER_ID:GNU>:-pthread>")
 target_link_options(cint PUBLIC "$<$<C_COMPILER_ID:GNU>:-pthread>")
 target_link_options(cint PUBLIC -lm)
 
 if (OPTIMIZE_FOR_NATIVE)
-	target_compile_options(cint PUBLIC "$<IF:$<C_COMPILER_ID:Intel>,-xHost,-march=native>")
+	target_compile_options(cint PRIVATE "$<IF:$<C_COMPILER_ID:Intel>,-xHost,-march=native>")
 endif()
 
 add_subdirectory(src)
