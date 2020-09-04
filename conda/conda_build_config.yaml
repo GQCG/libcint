@@ -43,7 +43,7 @@ pin_run_as_build:
     max_pin: x
   mkl_include:
     max_pin: x
-  llvm-openmp:
+  llvm_openmp:
     max_pin: x.x
   openmp:
     max_pin: x.x
