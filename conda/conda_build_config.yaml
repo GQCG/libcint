@@ -25,7 +25,7 @@ mkl_static:
   - 2020.0
 mkl_include:
   - 2020.0
-llvm-openmp:
+llvm_openmp:
   - 10.0.1
 openmp:
   - 8.0.1
