@@ -28,7 +28,7 @@ mkl_include:
 llvm_openmp:
   - 10.0.1
 numpy:
-  - 1.19
+  - 1.18
 openmp:
   - 8.0.1
 python:
