@@ -1,4 +1,4 @@
-name: libcint_conda
+name: Conda deployment
 
 on:
   push:
@@ -11,6 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
+        py: [3.6, 3.7, 3.8]
     steps:
       - uses: actions/setup-python@v1
         with:
@@ -38,5 +39,5 @@ jobs:
           conda create -n packaging -c conda-forge conda-build anaconda-client conda-verify
           source activate packaging
           conda config --set anaconda_upload yes
-          conda-build -c conda-forge -c intel conda --user ${{ secrets.ANACONDA_USER }} --token ${{ secrets.ANACONDA_TOKEN }}
+          conda-build -c conda-forge -c intel conda --user ${{ secrets.ANACONDA_USER }} --token ${{ secrets.ANACONDA_TOKEN }} --variants "{python: [${{ matrix.py }}] }"
           anaconda logout     
