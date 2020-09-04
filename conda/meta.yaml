@@ -12,27 +12,24 @@ requirements:
       - cmake {{ cmake }}
       - {{ compiler('c') }}
       - {{ compiler('cxx') }}
-      - eigen {{ eigen }}
       - git
       - make
-      - mkl-static {{ mkl_static }}
-      - mkl-include {{ mkl_include }}
     host:
       - blas {{ blas }}
       - intel-openmp {{ intel_openmp }}
-      - mkl {{ mkl }}
-      - numpy {{ numpy }}
-      - llvm-openmp               # [osx]
-      - openmp {{ openmp }}       # [linux]
-      - python {{ python }}
-    run:
-      - {{ pin_compatible('blas') }}
-      - {{ pin_compatible('intel-openmp') }}
-      - {{ pin_compatible('mkl') }}
-      - numpy {{ numpy }}
-      - python {{ python }}
       - llvm-openmp                    # [osx]
-      - {{ pin_compatible('openmp') }} # [linux]
+      - mkl-static {{ mkl_static }}
+      - mkl-include {{ mkl_include }}
+      - numpy
+      - openmp {{ openmp }}            # [linux]
+      - python
+    run:
+      - blas
+      - intel-openmp      
+      - llvm-openmp                    # [osx]
+      - numpy
+      - openmp                         # [linux]
+      - python
 
 test:
   commands:

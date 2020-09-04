@@ -16,24 +16,34 @@ CONDA_BUILD_SYSROOT:
 
 # Packages
 blas:
-  - 2.15
-mkl:
-  - 2019.0
-eigen:
-  - 3.3.7
-mkl_static:
-  - 2019.0
-mkl_include:
-  - 2019.0
-intel_openmp:
-  - 2019.0
+  - 2.17
 cmake:
-  - 3.14.0
+  - 3.18.0
+intel_openmp:
+  - 2020.0
+mkl_static:
+  - 2020.0
+mkl_include:
+  - 2020.0
+llvm-openmp:
+  - 10.0.1
+openmp:
+  - 8.0.1
 python:
   - 3.6
   - 3.7
   - 3.8
-numpy:
-  - 1.18.1
-openmp:
-  - 8.0.1
+
+pin_run_as_build:
+  blas:
+    max_pin: x.x
+  intel_openmp:
+    max_pin: x
+  mkl_static:
+    max_pin: x
+  mkl_include:
+    max_pin: x
+  llvm-openmp:
+    max_pin: x.x
+  openmp:
+    max_pin: x.x

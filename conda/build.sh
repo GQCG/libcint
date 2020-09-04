@@ -32,4 +32,3 @@ fi
 make -j ${CPU_COUNT}
 make test ARGS=-V
 make install
-
