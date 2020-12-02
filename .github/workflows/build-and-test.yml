@@ -3,7 +3,7 @@ name: Build and test
 on: pull_request
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -22,7 +22,7 @@ jobs:
       - name: Install conda   
         run: |  
           bash $HOME/miniconda.sh -b -u -p $HOME/miniconda
-          echo "::add-path::$HOME/miniconda/bin"
+          echo "$HOME/miniconda/bin" >> $GITHUB_PATH
       - name: Install conda dependencies 
         run: |
           conda install -c conda-forge cmake=3.18 blas=2.17 mkl=2020.0 numpy=1.19
