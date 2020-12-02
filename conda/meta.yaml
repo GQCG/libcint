@@ -9,19 +9,19 @@ source:
     git_tag: develop
 requirements:
     build:
-      - cmake {{ cmake }}
+      - cmake
       - {{ compiler('c') }}
       - {{ compiler('cxx') }}
       - git
       - make
     host:
-      - blas {{ blas }}
-      - intel-openmp {{ intel_openmp }}
+      - blas 
+      - intel-openmp
       - llvm-openmp                    # [osx]
-      - mkl-static {{ mkl_static }}
-      - mkl-include {{ mkl_include }}
+      - mkl-static
+      - mkl-include
       - numpy
-      - openmp {{ openmp }}            # [linux]
+      - openmp                         # [linux]
       - python
     run:
       - blas
