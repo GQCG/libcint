@@ -32,7 +32,7 @@ jobs:
           ls -hal /opt/MacOSX10.9.sdk
       - name: Deploy conda package
         run: |
-          conda create -n packaging -c conda-forge conda-build anaconda-client conda-verify
+          conda create -n packaging -c conda-forge conda-build anaconda-client conda-verify --freeze-installed
           source activate packaging
           conda config --set anaconda_upload no
           conda-build -c conda-forge -c intel conda --user ${{ secrets.ANACONDA_USER }} --token ${{ secrets.ANACONDA_TOKEN }} --variants "{python: [${{ matrix.python-version }}] }"
