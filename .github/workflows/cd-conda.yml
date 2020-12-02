@@ -22,7 +22,7 @@ jobs:
       - name: Setup conda
         uses: s-weigand/setup-conda@v1
         with:
-          update-conda: false
+          update-conda: true
           python-version: ${{ matrix.py }}
           conda-channels: anaconda, conda-forge, intel
       - name: Download MacOSX 10.9 SDK as conda-build dependency
