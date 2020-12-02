@@ -10,20 +10,20 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-18.04, macos-10.15]
-        python-version: [3.6, 3.7, 3.8]
+        py: [3.6, 3.7, 3.8]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repo 
         uses: actions/checkout@v2
-      - name: Python ${{ matrix.python-version }} setup
+      - name: Python ${{ matrix.py }} setup
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ matrix.py }}
       - name: Setup conda
         uses: s-weigand/setup-conda@v1
         with:
           update-conda: false
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ matrix.py }}
           conda-channels: anaconda, conda-forge, intel
       - name: Download MacOSX 10.9 SDK as conda-build dependency
         if: matrix.os == 'macos-latest'
@@ -34,9 +34,9 @@ jobs:
           ls -hal /opt/MacOSX10.9.sdk
       - name: Deploy conda package
         run: |
-          conda create -n packaging python=${{ matrix.python-version }}
+          conda create -n packaging python=${{ matrix.py }}
           source activate packaging
           conda install -c conda-forge conda-build anaconda-client conda-verify --freeze-installed
           conda config --set anaconda_upload yes
-          conda-build -c conda-forge -c intel conda --user ${{ secrets.ANACONDA_USER }} --token ${{ secrets.ANACONDA_TOKEN }} --variants "{python: [${{ matrix.python-version }}] }"
+          conda-build -c conda-forge -c intel conda --user ${{ secrets.ANACONDA_USER }} --token ${{ secrets.ANACONDA_TOKEN }} --variants "{python: [${{ matrix.py }}] }"
           anaconda logout
