@@ -1,10 +1,13 @@
-name: Conda CI
+name: Conda CI/CD
 
 on:
+  push:
+    branches:
+      - develop
   pull_request:
 
 jobs:
-  build:
+  conda-ci-cd:
     strategy:
       matrix:
         os: [ubuntu-18.04, macos-10.15]
@@ -30,11 +33,19 @@ jobs:
           sudo mkdir /opt/MacOSX10.9.sdk
           sudo tar -xf MacOSX10.9.sdk.tar.xz -C /opt
           ls -hal /opt/MacOSX10.9.sdk
-      - name: Deploy conda package
+      - name: Build conda package
+        if: github.event_name == 'pull_request'
         run: |
-          conda create -n packaging python=${{ matrix.py }}
+          conda create -n packaging -c conda-forge python=${{ matrix.py }} conda-build anaconda-client conda-verify
           source activate packaging
-          conda install -c conda-forge conda-build anaconda-client conda-verify --freeze-installed
           conda config --set anaconda_upload no
+          conda-build -c conda-forge -c intel conda --user ${{ secrets.ANACONDA_USER }} --token ${{ secrets.ANACONDA_TOKEN }} --variants "{python: [${{ matrix.py }}] }"
+          anaconda logout
+      - name: Deploy conda package
+        if: github.event_name == 'push'
+        run: |
+          conda create -n packaging -c conda-forge python=${{ matrix.py }} conda-build anaconda-client conda-verify
+          source activate packaging
+          conda config --set anaconda_upload yes
           conda-build -c conda-forge -c intel conda --user ${{ secrets.ANACONDA_USER }} --token ${{ secrets.ANACONDA_TOKEN }} --variants "{python: [${{ matrix.py }}] }"
           anaconda logout
