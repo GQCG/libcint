@@ -4,25 +4,23 @@ on: pull_request
 
 jobs:
   build-and-test:
-    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-18.04, macos-10.15]
+        py: [3.7]
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/setup-python@v1
+      - name: Checkout repo 
+        uses: actions/checkout@v2
+      - name: Python ${{ matrix.py }} setup
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.8' 
-      - uses: actions/checkout@v1
-      - name: Download conda (Linux)
-        if: matrix.os == 'ubuntu-latest'
-        run: wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $HOME/miniconda.sh
-      - name: Download conda (macOS)
-        if: matrix.os == 'macos-latest'
-        run: wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O $HOME/miniconda.sh
-      - name: Install conda   
-        run: |  
-          bash $HOME/miniconda.sh -b -u -p $HOME/miniconda
-          echo "$HOME/miniconda/bin" >> $GITHUB_PATH
+          python-version: ${{ matrix.py }}
+      - name: Setup conda
+        uses: s-weigand/setup-conda@v1
+        with:
+          update-conda: true
+          python-version: ${{ matrix.py }}
       - name: Install conda dependencies 
         run: |
           conda install -c conda-forge cmake=3.18 blas=2.17 mkl=2020.0 numpy=1.19
