@@ -24,7 +24,7 @@ jobs:
           python-version: ${{ matrix.py }}
           conda-channels: anaconda, conda-forge, intel
       - name: Download MacOSX 10.9 SDK as conda-build dependency
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-10.15'
         run: |
           wget https://github.com/phracker/MacOSX-SDKs/releases/download/10.13/MacOSX10.9.sdk.tar.xz
           sudo mkdir /opt/MacOSX10.9.sdk
