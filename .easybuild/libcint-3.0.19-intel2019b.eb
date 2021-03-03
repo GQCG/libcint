@@ -28,7 +28,7 @@ sanity_check_paths = {
   'dirs' : [],
 }
 
-configopts = '-DCMAKE_C_COMPILER=icc -DCMAKE_CXX_COMPILER=icpc -DENABLE_TEST=1 -DQUICK_TEST=1'
+configopts = '-DCMAKE_C_COMPILER=icc -DCMAKE_CXX_COMPILER=icpc -DENABLE_TEST=1 -DQUICK_TEST=1 -DUSE_MKL=1 -DOPTIMIZE_FOR_NATIVE=1'
 
 runtest = 'test'
 
