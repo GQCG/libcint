@@ -18,8 +18,8 @@ requirements:
       - blas 
       - intel-openmp
       - llvm-openmp                    # [osx]
-      - mkl
       - mkl-include
+      - mkl-static
       - numpy
       - openmp                         # [linux]
       - python
@@ -28,7 +28,7 @@ requirements:
       - intel-openmp      
       - llvm-openmp                    # [osx]
       - mkl-include
-      - mkl
+      - mkl-static
       - numpy
       - openmp                         # [linux]
       - python
